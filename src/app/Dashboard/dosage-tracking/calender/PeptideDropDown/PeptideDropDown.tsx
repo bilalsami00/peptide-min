@@ -9,7 +9,7 @@ const peptideOptions = [
   { name: "AOR-9604", sub: "Fat burning", tag: "Not FDA" },
   { name: "BPC-157", sub: "Tissue repair", tag: "Not FDA" },
   { name: "CJC-1295", sub: "Growth hormone", tag: "FDA" },
-  { name: "Ipamorelin", sub: "Muscle gain", tag: "Not FDA" },
+  { name: "Testosterone Enanthate", sub: "Muscle gain", tag: "Not FDA" },
   { name: "TB-500", sub: "Recovery", tag: "Not FDA" },
   { name: "Selank", sub: "Anti-anxiety", tag: "Not FDA" },
   { name: "Semax", sub: "Cognitive", tag: "Not FDA" },
