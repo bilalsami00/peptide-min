@@ -2271,6 +2271,8 @@
 
 // export default CalendarPage;
 
+
+
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
@@ -2330,12 +2332,13 @@ const CalendarPage: React.FC = () => {
 
   const [calendarData, setCalendarData] = useState({});
 const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+// const [isAIModalOpen, setIsAIModalOpen] = useState(true); // --> Set to true for testing
 
 
   useEffect(() => {
     const currentYear = dayjs().year();
     const yearsList = [];
-    for (let i = currentYear - 5; i <= currentYear; i++) {
+    for (let i = currentYear - 4; i <= currentYear; i++) {
       yearsList.push(i);
     }
     setYears(yearsList);
@@ -2381,25 +2384,59 @@ const [isAIModalOpen, setIsAIModalOpen] = useState(false);
     goal.trim() !== "";
 
   // Handle form submission
+  // const handleAddEvent = () => {
+  //   if (!isFormValid) return;
+
+  //   const newEvent: CalendarEvent = {
+  //     date: selectedDate,
+  //     peptide: selectedPeptide,
+  //     dosage: dosage,
+  //     goal: goal,
+  //   };
+
+
+  //     console.log("New Event Object:", newEvent); // Add this line
+
+
+  //   setEvents([...events, newEvent]);
+
+  //   // Reset form
+  //   setSelectedDate(null);
+  //   setSelectedPeptide(null);
+  //   setDosage("");
+  //   setGoal("");
+  //   setIsModalOpen(false);
+  // };
+
   const handleAddEvent = () => {
-    if (!isFormValid) return;
+  if (!isFormValid) return;
 
-    const newEvent: CalendarEvent = {
-      date: selectedDate,
-      peptide: selectedPeptide,
-      dosage: dosage,
-      goal: goal,
-    };
-
-    setEvents([...events, newEvent]);
-
-    // Reset form
-    setSelectedDate(null);
-    setSelectedPeptide(null);
-    setDosage("");
-    setGoal("");
-    setIsModalOpen(false);
+  const newEvent: CalendarEvent = {
+    date: selectedDate as string,
+    peptide: selectedPeptide,
+    dosage: dosage,
+    goal: goal,
   };
+
+  // Create updated array first
+  const updatedEvents = [...events, newEvent];
+  
+  // Log the FULL updated array
+  console.log("Updated Events Array:", updatedEvents);
+  
+  // Now update state
+  setEvents(updatedEvents);
+
+  // Reset form fields (keep date)
+  setSelectedPeptide(null);
+  setDosage("");
+  setGoal("");
+};
+
+// // Add this useEffect to log whenever events change
+// useEffect(() => {
+//   console.log("Current Events State:", events);
+// }, [events]); // Dependency array - runs when events change
 
   // NEW: Responsive popup positioning logic
   const handleOpenPopup = (date: string, e: React.MouseEvent) => {
@@ -2526,7 +2563,9 @@ const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 onClick={() => setIsAIModalOpen(true)}  disabled={events.length === 0}
   className={`h-10 rounded-3xl px-6 py-2 flex items-center justify-center gap-2 font-semibold transition 
     ${events.length === 0 
-      ? "bg-[#D8DFE0] !text-[#9EA9AA] cursor-not-allowed" 
+      // ? "bg-[#D8DFE0] !text-[#9EA9AA] cursor-not-allowed" 
+            ? "bg-[#D8DFE0] !text-[#9EA9AA] cursor-not-allowed" 
+
       : "bg-[#E9EDEE] !text-[#224674] hover:bg-[#d0d9db] cursor-pointer"}`}
 >
   AI Feedback
@@ -2553,7 +2592,8 @@ onClick={() => setIsAIModalOpen(true)}  disabled={events.length === 0}
           value={currentDate}
           onPanelChange={onPanelChange}
           headerRender={headerRender}
-          dateCellRender={dateCellRender}
+          // dateCellRender={dateCellRender}
+          cellRender={dateCellRender}
         />
       </ConfigProvider>
 
@@ -2748,99 +2788,19 @@ onClick={() => setIsAIModalOpen(true)}  disabled={events.length === 0}
 
       {isAIModalOpen && (
   <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center">
-    <div className="bg-white rounded-[16px] p-6 w-[360px] max-sm:w-[300px] relative">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="txt-24 font-semibold text-[#25292A]">Select a Date</h2>
+    <div className="bg-white rounded-[16px] p-6 w-[496px] max-sm:w-[300px] h-[555px] max-h-auto relative">
+      <div className="flex flex-col items-center justify-between mb-6">
+        <div className="flex items-center justify-between w-full  ">
+          <h2 className="txt-32 font-semibold text-[#25292A]">Select a Date</h2>
         <div
-          className="bg-[#D8DFE0] rounded-full p-2 cursor-pointer"
+          className="bg-[#D8DFE0] rounded-full p-2 cursor-pointer mb-4"
           onClick={() => setIsAIModalOpen(false)}
         >
-          <RxCross2 className="text-[#9EA9AA] font-extrabold" />
+          <RxCross2 className="text-[#9EA9AA] !font-extrabold w-6 h-6" />
         </div>
-      </div>
-
-      {/* <DatePicker
-        open
-        onOpenChange={(status) => {
-          if (!status) setIsAIModalOpen(false); // close modal when calendar closes
-        }}
-        onChange={(date) => {
-          if (date) {
-            console.log("Selected for AI:", date.format("YYYY-MM-DD"));
-            setIsAIModalOpen(false); // close after selection
-          }
-        }}
-        className="w-full"
-        popupClassName="custom-datepicker-dropdown"
-        inputReadOnly
-        // renderExtraFooter={null} // remove extra footer
-      /> */}
-      {/* <DatePicker
-                    placement="topRight"
-                    picker="date"
-                    value={selectedDate ? dayjs(selectedDate) : null}
-                    onChange={(date) =>
-                      setSelectedDate(date?.format("YYYY-MM-DD") || null)
-                    }
-                    className="w-full h-auto 2xl:w-[448px] xl:h-[48px] !bg-[#F2F5F6] rounded-md px-3 py-2"
-                    rootClassName="custom-datepicker-input"
-                    suffixIcon={
-                      <Image
-                        src="/Dashboard/dosage-tracking/calendarIcon.svg"
-                        alt="calendar"
-                        width={24}
-                        height={24}
-                        className="cursor-pointer"
-                      />
-                    }
-                    popupClassName="custom-datepicker-dropdown no-header-datepicker"
-                    inputReadOnly
-                    onPanelChange={(date) => setPickerValue(date)}
-                    panelRender={(panelNode) => (
-                      <div className="custom-panel-container">
-                        <div className="flex justify-between items-center px-6 py-3 text-[#626D6F] font-medium">
-                          <div className="flex items-center gap-1 relative">
-                            <span className="txt-16">
-                              {pickerValue.format("MMMM")}
-                            </span>
-                            <div className="relative flex items-center">
-                              <select
-                                value={pickerValue.year()}
-                                onChange={handleYearChange}
-                                className="bg-transparent border-none txt-16 focus:outline-none focus:ring-0 appearance-none pr-6"
-                              >
-                                {years.map((year) => (
-                                  <option key={year} value={year}>
-                                    {year}
-                                  </option>
-                                ))}
-                              </select>
-                              <IoMdArrowDropdown
-                                className="absolute right-0 pointer-events-none text-[#626D6F]"
-                                size={16}
-                              />
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={handlePrevMonthPicker}
-                              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
-                            >
-                              <MdKeyboardArrowLeft size={24} />
-                            </button>
-                            <button
-                              onClick={handleNextMonthPicker}
-                              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
-                            >
-                              <MdKeyboardArrowRight size={24} />
-                            </button>
-                          </div>
-                        </div>
-                        {panelNode}
-                      </div>
-                    )}
-                  /> */}
+        </div>
                   <Calendar1 />
+      </div>
     </div>
   </div>
 )}
