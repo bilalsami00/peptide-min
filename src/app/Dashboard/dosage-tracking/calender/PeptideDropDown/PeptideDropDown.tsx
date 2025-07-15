@@ -19,6 +19,8 @@ export type PeptideOption = {
   name: string;
   sub: string;
   tag: string;
+    isFDAApproved?: boolean; // Optional for type safety
+  dateValue?: string; // Optional for type safety
 };
 
 interface PeptideDropdownProps {
