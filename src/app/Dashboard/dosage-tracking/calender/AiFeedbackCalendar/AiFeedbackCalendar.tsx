@@ -16,6 +16,26 @@ const Calendar1: React.FC = () => {
   const month = currentDate.toLocaleString('default', { month: 'long' });
   const year = currentDate.getFullYear();
   
+
+  // Get today's date without time component
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Disable future dates
+  const isFutureDate = (day: number | null) => {
+    if (day === null) return false;
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+    return date > today;
+  };
+
+  // Disable next month button if next month is in the future
+  const isNextMonthDisabled = () => {
+    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    return nextMonth > today;
+  };
+
+
+
   // Generate years for dropdown
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
@@ -199,7 +219,7 @@ const Calendar1: React.FC = () => {
           </div>
           
           <div className='flex'>
-            <button 
+            {/* <button 
               className="flex items-center justify-center rounded-full w-12 h-12 hover:bg-gray-100 transition-colors"
               onClick={handlePrevMonth}
             >
@@ -210,6 +230,29 @@ const Calendar1: React.FC = () => {
               onClick={handleNextMonth}
             >
               <MdChevronRight className="text-[#626D6F] text-2xl" />
+            </button> */}
+            <button 
+              className="flex items-center justify-center rounded-full w-12 h-12 hover:bg-gray-100 transition-colors"
+              onClick={handlePrevMonth}
+            >
+              <MdChevronLeft className="text-[#626D6F] text-2xl" />
+            </button>
+            <button 
+              className={`flex items-center justify-center rounded-full w-12 h-12 ${
+                isNextMonthDisabled() 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'hover:bg-gray-100 transition-colors'
+              }`}
+              onClick={isNextMonthDisabled() ? undefined : handleNextMonth}
+              disabled={isNextMonthDisabled()}
+            >
+              <MdChevronRight 
+                className={`text-2xl ${
+                  isNextMonthDisabled() 
+                    ? 'text-gray-400' 
+                    : 'text-[#626D6F]'
+                }`}
+              />
             </button>
           </div>
         </div>
@@ -222,7 +265,7 @@ const Calendar1: React.FC = () => {
         </div>
         
         {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-2">
+        {/* <div className="grid grid-cols-7 gap-2">
           {days.map((day, index) => (
             <div 
               key={index} 
@@ -237,6 +280,35 @@ const Calendar1: React.FC = () => {
                       : isInRange(day)
                         ? 'bg-[#C8E4FC] text-[#224674]'
                         : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  {day}
+                </div>
+              ) : (
+                <div className="w-full h-full"></div> // Empty cell
+              )}
+            </div>
+          ))} */}
+          {/* Calendar Days */}
+        <div className="grid grid-cols-7 gap-2">
+          {days.map((day, index) => (
+            <div 
+              key={index} 
+              className="aspect-square flex" // Container for perfect square
+              onClick={() => !isFutureDate(day) && handleDateSelect(day)}
+            >
+              {day ? (
+                <div 
+                  className={`w-full h-full rounded-full flex items-center justify-center txt-14 ${
+                    isFutureDate(day)
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'cursor-pointer text-gray-800 hover:bg-gray-100'
+                  } ${
+                    !isFutureDate(day) && (isStartDate(day) || isEndDate(day)
+                      ? 'bg-[#224674] text-white font-semibold' 
+                      : isInRange(day)
+                        ? 'bg-[#C8E4FC] text-[#224674]'
+                        : '')
+                  }`}
                 >
                   {day}
                 </div>

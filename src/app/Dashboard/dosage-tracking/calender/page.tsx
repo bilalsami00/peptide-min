@@ -10,12 +10,12 @@ import updateLocale from "dayjs/plugin/updateLocale";
 import "dayjs/locale/en-gb";
 import enGB from "antd/locale/en_GB";
 import "@fontsource/inter";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+// import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import "antd/dist/reset.css";
-import { DatePicker } from "antd";
+// import { DatePicker } from "antd";
 import type { CalendarProps } from "antd";
-import PeptideDropdown from "./PeptideDropDown/PeptideDropDown";
+// import PeptideDropdown from "./PeptideDropDown/PeptideDropDown";
 import type { PeptideOption } from "./PeptideDropDown/PeptideDropDown";
 import Calendar1 from "./AiFeedbackCalendar/AiFeedbackCalendar";
 import AddEditPeptideModal from "./AddEditPeptideModal/AddEditPeptideModal";
@@ -78,10 +78,31 @@ const CalendarPage: React.FC = () => {
     null
   );
 
+  // Add this inside CalendarPage component
+  const today = dayjs().endOf("day");
+
+  // Disable future dates in calendar
+  const disabledDate = (current: Dayjs) => {
+    return current > today;
+  };
+
+  // Disable next month button when next month is in the future
+  const isNextMonthDisabled = currentDate
+    .add(1, "month")
+    .isAfter(today, "month");
+
   // Dropdown visibility per card
   const [dropdownVisible, setDropdownVisible] = useState<
     Record<string, boolean>
   >({});
+
+  // Add this right after your state declarations
+  useEffect(() => {
+    console.log(
+      "Current eventsByDate state:",
+      JSON.parse(JSON.stringify(eventsByDate))
+    );
+  }, [eventsByDate]);
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -326,12 +347,30 @@ const CalendarPage: React.FC = () => {
               height={32}
             />
           </button>
-          <button
+          {/* <button
             onClick={handleNextMonth}
             className="w-8 h-8 flex items-center justify-center rounded-full"
           >
             <Image
               src="/Dashboard/dosage-tracking/arrow-right.svg"
+              alt="Next"
+              width={32}
+              height={32}
+            />
+          </button> */}
+          <button
+            onClick={isNextMonthDisabled ? undefined : handleNextMonth}
+            disabled={isNextMonthDisabled}
+            className={`w-8 h-8 flex items-center justify-center rounded-full ${
+              isNextMonthDisabled ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            <Image
+              src={
+                isNextMonthDisabled
+                  ? "/Dashboard/dosage-tracking/arrow-right.svg"
+                  : "/Dashboard/dosage-tracking/arrow-right.svg"
+              }
               alt="Next"
               width={32}
               height={32}
@@ -377,6 +416,7 @@ const CalendarPage: React.FC = () => {
           onPanelChange={onPanelChange}
           headerRender={headerRender}
           cellRender={dateCellRender}
+          disabledDate={disabledDate} // Add this prop
         />
       </ConfigProvider>
 
@@ -402,11 +442,11 @@ const CalendarPage: React.FC = () => {
                 <RxCross2 size={20} />
               </button> */}
               <div
-                  className="bg-[#D8DFE0] rounded-full p-2 cursor-pointer mb-4"
-                  onClick={() => setIsDrawerOpen(false)}
-                >
-                  <RxCross2 className="text-[#9EA9AA] !font-extrabold w-6 h-6" />
-                </div>
+                className="bg-[#D8DFE0] rounded-full p-2 cursor-pointer mb-4"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                <RxCross2 className="text-[#9EA9AA] !font-extrabold w-6 h-6" />
+              </div>
             </div>
 
             {/* Peptide cards */}
@@ -447,20 +487,24 @@ const CalendarPage: React.FC = () => {
                                     height={24}
                                     className="inline mr-2"
                                   />
-                                  <span className="txt-18 font-medium">Edit</span>
+                                  <span className="txt-18 font-medium">
+                                    Edit
+                                  </span>
                                 </button>
                                 <button
                                   className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-500"
                                   onClick={() => setupDeleteConfirmation(event)}
                                 >
-                                 <Image
+                                  <Image
                                     src="/Dashboard/dosage-tracking/deleteRightDrawer.svg"
                                     alt="Edit Icon"
                                     width={24}
                                     height={24}
                                     className="inline mr-2"
                                   />
-                                  <span className="txt-18 font-medium">Delete</span>
+                                  <span className="txt-18 font-medium">
+                                    Delete
+                                  </span>
                                 </button>
                               </div>
                             )}
@@ -470,14 +514,15 @@ const CalendarPage: React.FC = () => {
                         {/* FDA Status and Date Value */}
                         <div className="flex gap-3 mt-2 items-center">
                           <div className="flex items-center  gap-1">
-                            <FaSyringe className=" text-[#224674]"/> <span className="text-[#51595A] txt-14 font-medium">
+                            <FaSyringe className=" text-[#224674]" />{" "}
+                            <span className="text-[#51595A] txt-14 font-medium">
                               {/* dosage: */}
                               {event.dosage} mcg
                             </span>
                           </div>
                           <div className="flex items-center gap-1">
                             {/* <span className="txt-14 font-medium text-[#5A6B73]"> */}
-                              <FaCircleCheck className=" text-[#224674]"/>
+                            <FaCircleCheck className=" text-[#224674]" />
                             {/* </span> */}
                             <span
                               // className={`txt-14 font-medium ${
@@ -487,9 +532,7 @@ const CalendarPage: React.FC = () => {
                               // }`}
                               className="txt-14 font-medium text-[#51595A]"
                             >
-                              {event.isFDAApproved
-                                ? "FDA"
-                                : "Not FDA"}
+                              {event.isFDAApproved ? "FDA" : "Not FDA"}
                             </span>
                           </div>
 
@@ -513,7 +556,7 @@ const CalendarPage: React.FC = () => {
                       Dosage: {event.dosage} mcg
                     </p> */}
                           <p className="text-[#25292A] txt-18 break-words mt-1">
-                             {event.goal}
+                            {event.goal}
                           </p>
                         </div>
                       </div>
@@ -540,18 +583,18 @@ const CalendarPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="txt-32 font-semibold mb-4">Delete Peptide</h3>
-              <div
+                <div
                   className="bg-[#D8DFE0] rounded-full p-2 cursor-pointer mb-4"
                   onClick={() => setDeletingEvent(null)}
                 >
                   <RxCross2 className="text-[#9EA9AA] !font-extrabold w-6 h-6" />
                 </div>
               </div>
-            <p className="mb-6 txt-18 font-normal text-[#25292A]">
-              {/* Are you sure you want to delete the peptide entry for{" "}
+              <p className="mb-6 txt-18 font-normal text-[#25292A]">
+                {/* Are you sure you want to delete the peptide entry for{" "}
               {deletingEvent.peptide?.name}? */}
-              Are you sure you want to delete this peptide?
-            </p>
+                Are you sure you want to delete this peptide?
+              </p>
             </div>
             <div className="flex justify-end gap-3">
               <button

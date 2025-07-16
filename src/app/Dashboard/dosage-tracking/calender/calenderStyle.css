@@ -188,27 +188,58 @@
         }
 
         /* 1) Outer popup wrapper */
-        .custom-datepicker-dropdown {
+        /* .custom-datepicker-dropdown {
           width: 260px !important;
           height: 344px !important;
           min-width: 260px !important;
           min-height: 344px !important;
           max-width: 360px !important;
-          max-height: 344px !important;
+          max-height: auto !important;
           border-radius: 28px !important;
           box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15),
             0px 1px 2px 0px rgba(0, 0, 0, 0.3) !important;
           overflow: hidden !important;
-        }
+        } */
 
         /* Override for ≥768px */
-        @media (min-width: 768px) {
+        /* @media (min-width: 768px) {
           .custom-datepicker-dropdown {
-            width: 360px !important;
-            height: 344px !important;
+            width: 360px !important; */
+            /* height: 344px !important; */
+            /* height: auto !important;
             min-width: 360px !important;
           }
-        }
+        } */
+         /* AddEditPeptideModal.css */
+.custom-datepicker-dropdown {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 360px !important;
+  border-radius: 28px !important;
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15),
+              0px 1px 2px 0px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+  transition: height 0.3s ease, min-height 0.3s ease !important;
+}
+
+@media (min-width: 768px) {
+  .custom-datepicker-dropdown {
+    width: 360px !important;
+    min-width: 360px !important;
+  }
+}
+
+/* Remove fixed heights */
+.no-header-datepicker {
+  /* Remove fixed height properties */
+  height: auto !important;
+  min-height: auto !important;
+}
+
+/* Smooth transition for calendar resize */
+.custom-panel-container {
+  transition: height 0.3s ease;
+}
 
         /* 2) Panel container and panel itself */
         .custom-datepicker-dropdown .ant-picker-panel-container,
