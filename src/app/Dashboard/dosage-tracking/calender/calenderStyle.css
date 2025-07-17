@@ -241,6 +241,33 @@
   transition: height 0.3s ease;
 }
 
+
+
+
+
+/* calenderStyle.css */
+
+/* For ALL disabled dates - base style */
+.ant-picker-cell-disabled .ant-picker-cell-inner {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Only apply opacity to NON-CURRENT months */
+.ant-picker-cell.ant-picker-cell-disabled:not(.ant-picker-cell-in-view) {
+  opacity: 0.4;
+}
+
+/* Remove hover effects on disabled dates */
+.ant-picker-cell-disabled:hover .ant-picker-cell-inner {
+  background: transparent !important;
+}
+
+
+
+
+
+
+
         /* 2) Panel container and panel itself */
         .custom-datepicker-dropdown .ant-picker-panel-container,
         .custom-datepicker-dropdown .ant-picker-panel {
@@ -312,9 +339,20 @@
         }
 
 
-
-
-
+        .ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected .ant-picker-calendar-date 
+        .ant-picker-calendar-date-value, :where(.css-dev-only-do-not-override-pjilya).ant-picker-calendar.ant-picker-calendar-full 
+        .ant-picker-cell-selected:hover .ant-picker-calendar-date .ant-picker-calendar-date-value,
+        :where(.css-dev-only-do-not-override-pjilya).ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected 
+        .ant-picker-calendar-date-today .ant-picker-calendar-date-value, :where(.css-dev-only-do-not-override-pjilya).ant-picker-calendar.ant-picker-calendar-full 
+        .ant-picker-cell-selected:hover .ant-picker-calendar-date-today .ant-picker-calendar-date-value {
+            color: #000000;
+        }
+        
+        :where(.css-dev-only-do-not-override-pjilya).ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-in-view.ant-picker-cell-selected 
+        .ant-picker-calendar-date, :where(.css-dev-only-do-not-override-pjilya).ant-picker-calendar.ant-picker-calendar-full 
+        .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-calendar-date-today {
+            background: #ffffff;
+        }
 
 
 

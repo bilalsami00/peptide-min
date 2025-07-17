@@ -347,17 +347,6 @@ const CalendarPage: React.FC = () => {
               height={32}
             />
           </button>
-          {/* <button
-            onClick={handleNextMonth}
-            className="w-8 h-8 flex items-center justify-center rounded-full"
-          >
-            <Image
-              src="/Dashboard/dosage-tracking/arrow-right.svg"
-              alt="Next"
-              width={32}
-              height={32}
-            />
-          </button> */}
           <button
             onClick={isNextMonthDisabled ? undefined : handleNextMonth}
             disabled={isNextMonthDisabled}
@@ -435,12 +424,6 @@ const CalendarPage: React.FC = () => {
               <h2 className="text-xl font-semibold">
                 {drawerDate ? dayjs(drawerDate).format("MMM D, YYYY") : ""}
               </h2>
-              {/* <button
-                onClick={() => setIsDrawerOpen(false)}
-                className="p-1 rounded-full hover:bg-gray-100"
-              >
-                <RxCross2 size={20} />
-              </button> */}
               <div
                 className="bg-[#D8DFE0] rounded-full p-2 cursor-pointer mb-4"
                 onClick={() => setIsDrawerOpen(false)}
@@ -591,8 +574,6 @@ const CalendarPage: React.FC = () => {
                 </div>
               </div>
               <p className="mb-6 txt-18 font-normal text-[#25292A]">
-                {/* Are you sure you want to delete the peptide entry for{" "}
-              {deletingEvent.peptide?.name}? */}
                 Are you sure you want to delete this peptide?
               </p>
             </div>

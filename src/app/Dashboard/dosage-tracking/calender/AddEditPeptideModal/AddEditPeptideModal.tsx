@@ -763,7 +763,7 @@ const AddEditPeptideModal: React.FC<AddEditPeptideModalProps> = ({
           <div className="flex flex-col gap-6">
             <div className="relative">
               <p>Date</p>
-              <DatePicker
+              {/* <DatePicker
                 open={isCalendarOpen}
                 onOpenChange={(open) => {
                   setIsCalendarOpen(open);
@@ -860,7 +860,113 @@ const AddEditPeptideModal: React.FC<AddEditPeptideModalProps> = ({
                     {panelNode}
                   </div>
                 )}
-              />
+              /> */}
+              <DatePicker
+  allowClear
+  open={isCalendarOpen}
+  onOpenChange={(open) => {
+    setIsCalendarOpen(open);
+    if (open) setTimeout(updateCalendarHeight, 50);
+  }}
+  placement="topRight"
+  picker="date"
+
+  // 🚩 Use pickerValue so the panel (grid + header) always follows your state
+  value={pickerValue}
+
+  // 🚩 But only show text in input when you actually have a selectedDate
+  format={(val) =>
+    val && selectedDate ? val.format("YYYY-MM-DD") : ""
+  }
+
+  onChange={(date) => {
+    if (date) {
+      // user picked something
+      setSelectedDate(date.format("YYYY-MM-DD"));
+      setPickerValue(date);
+      setIsCalendarOpen(false);
+    } else {
+      // user cleared
+      setSelectedDate(null);
+      setPickerValue(dayjs());  // reset panel back to today
+    }
+  }}
+
+  defaultPickerValue={dayjs()}    // on very first open, show current month
+  inputReadOnly
+  className="w-full h-auto 2xl:w-[448px] xl:h-[48px] !bg-[#F2F5F6] rounded-md px-3 py-2"
+  rootClassName="custom-datepicker-input"
+  suffixIcon={
+    <Image
+      src="/Dashboard/dosage-tracking/calendarIcon.svg"
+      alt="calendar"
+      width={24}
+      height={24}
+      className="cursor-pointer"
+    />
+  }
+  popupClassName="custom-datepicker-dropdown no-header-datepicker"
+  disabledDate={disabledDate}
+
+  panelRender={(panelNode) => (
+    <div className="custom-panel-container" ref={calendarRef}>
+      {/* your custom header */}
+      <div className="flex justify-between items-center px-6 py-3 text-[#626D6F] font-medium">
+        <div className="flex items-center gap-1 relative">
+          <span className="txt-16">{pickerValue.format("MMMM")}</span>
+          <div className="relative flex items-center">
+            <select
+              value={pickerValue.year()}
+              onChange={(e) =>
+                setPickerValue(pickerValue.year(Number(e.target.value)))
+              }
+              className="bg-transparent border-none txt-16 focus:outline-none focus:ring-0 appearance-none pr-6"
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+            <IoMdArrowDropdown
+              className="absolute right-0 pointer-events-none text-[#626D6F]"
+              size={16}
+            />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setPickerValue(pickerValue.subtract(1, "month"));
+            }}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
+          >
+            <MdKeyboardArrowLeft size={24} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isNextMonthDisabled)
+                setPickerValue(pickerValue.add(1, "month"));
+            }}
+            disabled={isNextMonthDisabled}
+            className={`w-8 h-8 flex items-center justify-center rounded-full ${
+              isNextMonthDisabled
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-100"
+            }`}
+          >
+            <MdKeyboardArrowRight
+              size={24}
+              className={isNextMonthDisabled ? "text-gray-400" : ""}
+            />
+          </button>
+        </div>
+      </div>
+      {panelNode}
+    </div>
+  )}
+/>
+
             </div>
           </div>
 
